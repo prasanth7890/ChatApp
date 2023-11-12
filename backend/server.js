@@ -32,16 +32,16 @@ app.get('/chats/:id', (req, res)=>{
 });
 
 
-// connection event
-io.on('connection', (socket)=>{
-    console.log(`a user connected: ${socket.id}`);
+// // connection event
+// io.on('connection', (socket)=>{
+//     console.log(`a user connected: ${socket.id}`);
     
-    socket.on("send_message", (data)=>{
-        console.log(data);
-        socket.broadcast.emit("receive_message", data);
-    })
+//     socket.on("send_message", (data)=>{
+//         console.log(data);
+//         socket.broadcast.emit("receive_message", data);
+//     })
 
-})
+// })
 
 const PORT = process.env.PORT;
 // console.log(process.env.PORT)
