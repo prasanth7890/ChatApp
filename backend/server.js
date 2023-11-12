@@ -1,14 +1,11 @@
 const express = require("express");
-const dotenv = require('dotenv')
+require('dotenv').config({path: "../.env"});
 const cors = require("cors");
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const chats = require("./data/data");
-
-dotenv.config();
-const PORT = process.env.PORT;
 
 
 app.use(cors());
@@ -46,6 +43,8 @@ io.on('connection', (socket)=>{
 
 })
 
+const PORT = process.env.PORT;
+// console.log(process.env.PORT)
 
 server.listen(PORT, ()=>{
     console.log(`Server Connected to: ${PORT}`);
