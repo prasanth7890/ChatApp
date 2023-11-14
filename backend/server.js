@@ -44,7 +44,6 @@ app.get('/chats/:id', (req, res)=>{
 // })
 
 const PORT = process.env.PORT;
-// console.log(process.env.PORT)
 
 server.listen(PORT, ()=>{
     console.log(`Server Connected to: ${PORT}`);

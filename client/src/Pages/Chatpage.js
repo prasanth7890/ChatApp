@@ -19,7 +19,7 @@ const Chatpage = () => {
     <div>
       This is chatpage
       {chats.map((chat)=>{
-        <div>hello</div>
+        return <div key={chat._id}>{chat.chatName}</div>
       })}
     </div>
   )
