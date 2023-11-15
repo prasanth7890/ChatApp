@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 const Chatpage = () => {
-    const [chats, setChats] = useState([]);
+    const [chats, setChats] = useState<any[]>([]);
 
     useEffect(()=>{
         fetchChats();
