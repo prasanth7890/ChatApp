@@ -5,7 +5,7 @@ import SignUp from "../Components/Authentication/SignUp";
 
 const Homepage = () => {
   return (
-    <Container maxW={"xl"} centerContent bg={"orange"}>
+    <Container maxW={"xl"} centerContent>
       <Box
         display={"flex"}
         justifyContent={"center"}
