@@ -2,20 +2,21 @@ const express = require("express");
 require('dotenv').config({path: "../.env"});
 const cors = require("cors");
 const http = require("http");
+const connectDB = require("./config/db");
 const app = express();
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const chats = require("./data/data");
 
-
+connectDB();
 app.use(cors());
 
-const io = new Server(server, {
-    cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"]
-    },
-});
+// const io = new Server(server, {
+//     cors: {
+//         origin: "http://localhost:3000",
+//         methods: ["GET", "POST"]
+//     },
+// });
 
 
 app.get('/', (req, res)=>{
