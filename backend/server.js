@@ -7,9 +7,12 @@ const app = express();
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const chats = require("./data/data");
+const userRoutes = require('./routers/userRoutes');
 
 connectDB();
 app.use(cors());
+app.use(express.json());
+app.use("/", userRoutes);
 
 // const io = new Server(server, {
 //     cors: {
