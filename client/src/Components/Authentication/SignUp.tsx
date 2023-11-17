@@ -9,7 +9,7 @@ const SignUp:React.FC = () => {
   const [confirmpassword, setConfirmPassword] = useState<string>("");
   const [picture, setPicture] = useState<string>("");
 
-  const postDetails = (pics:any) => {}; // TODO
+  const postDetails = (pics:any) => {}; 
 
   const submitHandler = () => {};
 

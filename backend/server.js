@@ -8,12 +8,14 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const chats = require("./data/data");
 const userRoutes = require('./routers/userRoutes');
+const {notFound, errorHandler} = require("./midddlewares/errorMiddleware");
 
 connectDB();
 app.use(cors());
 app.use(express.json());
 app.use("/", userRoutes);
-
+app.use(notFound);
+app.use(errorHandler);
 // const io = new Server(server, {
 //     cors: {
 //         origin: "http://localhost:3000",
