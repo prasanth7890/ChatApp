@@ -10,7 +10,7 @@ const registerUser = asyncHandler(async(req, res) => {
         throw new Error("Please Enter all the Fields");
     }
 
-    let picture = "";
+    let picture;
     if(req.file) {
         picture = req.file.path;        
     }

@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useToast } from "@chakra-ui/react";
+import axios from "axios";
 
 const SignUp: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
@@ -70,7 +71,38 @@ const SignUp: React.FC = () => {
     // }
   };
 
-  const submitHandler = () => {};
+  const submitHandler = async() => {
+    console.log(name, email, password, confirmpassword, picture);
+    if(password !== confirmpassword) {
+      toast({
+        title: "Entered Passwords are not matching, Please Check Again",
+        status: "error",
+        variant: "subtle",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+        colorScheme: "red",
+      });
+      return;
+    }
+
+    const Data = new FormData();
+    Data.append('name', name);
+    Data.append('email', email);
+    Data.append('password', password);
+    if(picture) {
+      Data.append('picture', picture);
+    }
+
+    const {data} = await axios.post('http://localhost:4000/', Data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+
+    console.log(data);
+
+  };
 
   return (
     <VStack spacing={"5px"}>
@@ -137,7 +169,7 @@ const SignUp: React.FC = () => {
           }}
         ></Input>
       </FormControl>
-
+      
       <Button
         colorScheme="blue"
         width={"100%"}
