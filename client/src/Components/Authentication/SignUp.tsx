@@ -16,13 +16,13 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [confirmpassword, setConfirmPassword] = useState<string>("");
-  const [picture, setPicture] = useState<string>("");
+  const [picture, setPicture] = useState(null);
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
 
   const postDetails = (pics: any) => {
     setLoading(true);
-    if (pics === undefined) {
+    if (pics === undefined || (pics.type.toString().split('/')[0] !== 'image')) {
       toast({
         title: "Please Select an Image",
         status: "warning",
@@ -33,37 +33,41 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    if (pics.type === "image/jpeg" || pics.type === "image/png") {
-      const data = new FormData();
-      data.append("file", pics);
-      data.append("upload_preset", "chat_app");
-      data.append("cloud_name", "drrgatts5");
-      // TODO : CLOUDINARY IS NOT WORKING, USE ANOTHER WAY TO MAKE IT WORK
-    
-      fetch("https://api.cloudinary.com/v1_1/drrgatts5", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setPicture(data.url.toString());
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        });
-    } else {
-      toast({
-        title: "Please Select an Image",
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+    setPicture(pics);
+    setTimeout(() => {
       setLoading(false);
-      return;
-    }
+    }, 1000);
+
+    // if (pics.type === "image/jpeg" || pics.type === "image/png") {
+    //   const data = new FormData();
+    //   data.append("file", pics);
+    //   data.append("upload_preset", "chat_app");
+    //   data.append("cloud_name", "drrgatts5");
+    
+    //   fetch("https://api.cloudinary.com/v1_1/drrgatts5", {
+    //     method: "post",
+    //     body: data,
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       setPicture(data.url.toString());
+    //       setLoading(false);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       setLoading(false);
+    //     });
+    // } else {
+    //   toast({
+    //     title: "Please Select an Image",
+    //     status: "warning",
+    //     duration: 5000,
+    //     isClosable: true,
+    //     position: "bottom",
+    //   });
+    //   setLoading(false);
+    //   return;
+    // }
   };
 
   const submitHandler = () => {};
