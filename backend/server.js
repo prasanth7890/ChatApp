@@ -16,6 +16,7 @@ app.use(express.json());
 app.use("/", userRoutes);
 app.use(notFound);
 app.use(errorHandler);
+
 // const io = new Server(server, {
 //     cors: {
 //         origin: "http://localhost:3000",

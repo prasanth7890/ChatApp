@@ -3,11 +3,16 @@ const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
 
 const registerUser = asyncHandler(async(req, res) => {
-    const {name, email, password, picture} = req.body;
+    const {name, email, password} = req.body;
 
     if(!name || !email || !password) {
         res.status(400);
         throw new Error("Please Enter all the Fields");
+    }
+
+    let picture = "";
+    if(req.file) {
+        picture = req.file.path;        
     }
 
     // if user exists in db or not
