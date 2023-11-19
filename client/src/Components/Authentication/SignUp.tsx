@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUp: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
@@ -20,6 +21,7 @@ const SignUp: React.FC = () => {
   const [picture, setPicture] = useState(null);
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
+  const navigate = useNavigate();
 
   const postDetails = (pics: any) => {
     setLoading(true);
@@ -38,41 +40,24 @@ const SignUp: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-
-    // if (pics.type === "image/jpeg" || pics.type === "image/png") {
-    //   const data = new FormData();
-    //   data.append("file", pics);
-    //   data.append("upload_preset", "chat_app");
-    //   data.append("cloud_name", "drrgatts5");
-    
-    //   fetch("https://api.cloudinary.com/v1_1/drrgatts5", {
-    //     method: "post",
-    //     body: data,
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       setPicture(data.url.toString());
-    //       setLoading(false);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       setLoading(false);
-    //     });
-    // } else {
-    //   toast({
-    //     title: "Please Select an Image",
-    //     status: "warning",
-    //     duration: 5000,
-    //     isClosable: true,
-    //     position: "bottom",
-    //   });
-    //   setLoading(false);
-    //   return;
-    // }
   };
 
   const submitHandler = async() => {
-    console.log(name, email, password, confirmpassword, picture);
+    setLoading(true);
+    if(!name || !email || !password || !confirmpassword) {
+      toast({
+        title: "Please Fill all the Fields",
+        status: "error",
+        variant: "subtle",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+        colorScheme: "red",
+      });
+      setLoading(false);
+      return;
+    }
+
     if(password !== confirmpassword) {
       toast({
         title: "Entered Passwords are not matching, Please Check Again",
@@ -83,6 +68,7 @@ const SignUp: React.FC = () => {
         position: "bottom",
         colorScheme: "red",
       });
+      setLoading(false);
       return;
     }
 
@@ -94,13 +80,41 @@ const SignUp: React.FC = () => {
       Data.append('picture', picture);
     }
 
-    const {data} = await axios.post('http://localhost:4000/', Data, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  });
+    try {
+      const {data} = await axios.post('http://localhost:4000/', Data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
-    console.log(data);
+    toast({
+      title: "Registration is Succesful",
+      status: "success",
+      variant: "subtle",
+      duration: 3000,
+      isClosable: true,
+      position: "bottom",
+    });
+
+    localStorage.setItem('userInfo', JSON.stringify(data));
+
+    setLoading(false);
+    navigate('/chats');
+    
+    } catch(error: any) {
+      toast({
+        title: "Error Occured",
+        description: error.response.data.message,
+        status: "error",
+        variant: "subtle",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
 
   };
 

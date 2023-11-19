@@ -10,7 +10,11 @@ const Chatpage = () => {
     }, [])
 
     const fetchChats = async() => {
-        const {data} = await axios.get('http://localhost:4000/chats');
+        const {data} = await axios.get('http://localhost:4000/chats', {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
         console.log(data);
         setChats(data);
     }
