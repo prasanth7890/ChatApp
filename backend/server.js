@@ -30,7 +30,7 @@ app.get('/', (req, res)=>{
 });
 
 app.get('/chats', (req, res)=>{
-    res.json(chats);
+    res.status(200).json(chats);
 });
 
 app.get('/chats/:id', (req, res)=>{
