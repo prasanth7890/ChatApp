@@ -8,12 +8,14 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const chats = require("./data/data");
 const userRoutes = require('./routers/userRoutes');
+const chatRoutes = require('./routers/chatRoutes');
 const {notFound, errorHandler} = require("./midddlewares/errorMiddleware");
 
 connectDB();
 app.use(cors());
 app.use(express.json());
 app.use("/", userRoutes);
+app.use('/chats', chatRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
@@ -25,18 +27,7 @@ app.use(errorHandler);
 // });
 
 
-app.get('/', (req, res)=>{
-    res.send("<h1>Hello world</h1>");
-});
 
-app.get('/chats', (req, res)=>{
-    res.status(200).json(chats);
-});
-
-app.get('/chats/:id', (req, res)=>{
-    const singleChat = chats.find((c) => c._id === req.params.id);
-    res.send(singleChat);
-});
 
 
 // // connection event

@@ -30,17 +30,12 @@ const Login:React.FC = () => {
       return;
     }
 
-    const Data = new FormData();
-    Data.append('email', email);
-    Data.append('password', password);
-    console.log(email, password);
     
     try {
       const {data} = await axios.post('http://localhost:4000/login',{
         "email": email,
         "password": password,
       });
-      console.log(data);
       localStorage.setItem('userInfo', JSON.stringify(data));
 
       setLoading(false);
