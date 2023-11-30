@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../../Features/user';
 
 const Login:React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -10,6 +12,7 @@ const Login:React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [show, setShow] = useState<boolean>(false);
 
@@ -36,8 +39,9 @@ const Login:React.FC = () => {
         "email": email,
         "password": password,
       });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-
+      
+      dispatch(login(data));
+      
       setLoading(false);
       navigate('/chats');
     

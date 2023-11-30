@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-
-const Chatpage = () => {
+const Chatpage:React.FC = () => {
     const [chats, setChats] = useState<any[]>([]);
-
-    useEffect(()=>{
-        fetchChats();
-    }, [])
-
+    const navigate = useNavigate();
+    
     const fetchChats = async() => {
         const {data} = await axios.get('http://localhost:4000/chats');
         console.log(data);
         setChats(data);
     }
+
+    useEffect(()=>{
+        fetchChats();
+
+        const data = localStorage.getItem("userInfo");
+        if (!data) {
+            navigate("/");
+        }
+    }, []);
+
 
   return (
     <div>
