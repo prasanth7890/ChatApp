@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Agbalumo&family=Crimson+Pro:wght@300&family=Lobster&family=Source+Code+Pro:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&family=Crimson+Pro:wght@300&family=Josefin+Sans:wght@300&family=Lobster&family=Source+Code+Pro:wght@300&display=swap');
 .App {
   min-height: 100vh;
   display: flex;
-  background-image: url('../src/background.jpg');
+  /* background-image: url('../src/background.jpg'); */
+  background-color: orangered;
   background-size: cover;
   background-position: center;
 }
