@@ -1,6 +1,8 @@
-import { Avatar, Box, Button, Flex, Menu, MenuButton, Text, Tooltip } from '@chakra-ui/react';
+import { Avatar, Box, Button, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react';
 import React,{useState} from 'react';
 import { useSelector } from 'react-redux';
+import ProfileModal from './ProfileModal';
+import { useNavigate } from 'react-router-dom';
 
 const SideBar: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -8,6 +10,12 @@ const SideBar: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChats] = useState();
   const user = useSelector((state:any)=>state.user.value);
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    localStorage.removeItem('userInfo');
+    navigate('/');
+  }
 
   return (
     <>
@@ -45,6 +53,14 @@ const SideBar: React.FC = () => {
             <MenuButton as={Button} rightIcon={<i className="fa-solid fa-chevron-down"></i>} style={{backgroundColor: "white"}}>
               <Avatar size={'sm'} cursor={'pointer'} name={user.name} src={user.pic}/>
             </MenuButton>
+            <MenuList>
+              <ProfileModal user={user} >
+                <MenuItem>My Profile</MenuItem>
+              </ProfileModal>
+              <MenuDivider></MenuDivider>
+              <MenuItem onClick={logoutHandler}>LogOut</MenuItem>
+
+            </MenuList>
           </Menu>
         </div>
       </Box>
