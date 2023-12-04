@@ -18,7 +18,7 @@ const Chatpage:React.FC = () => {
         const data = localStorage.getItem("userInfo");
         if (!data) {
             navigate("/");
-        }else {
+        } else {
           dispatch(login(JSON.parse(data)));
         }
     }, []);

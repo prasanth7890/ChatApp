@@ -3,7 +3,7 @@ import { Button, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalF
 
 interface profileModalProps {
     user: Object,
-    children?: string,
+    children?: any,
 }
 
 const ProfileModal:React.FC<profileModalProps> = ({user, children}) => {
