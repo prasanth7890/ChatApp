@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { userType } from "../ts/configs";
 
-const initialValue = {};
+const initialValue:userType = {
+  _id: "",
+  name: "",
+  pic: "",
+  email: "",
+};
 
 
 export const userSlice = createSlice({
@@ -13,7 +19,7 @@ export const userSlice = createSlice({
     },
 
     logout: (state:any) => {
-      state.value = {};
+      state.value = initialValue;
     },
   },
 });

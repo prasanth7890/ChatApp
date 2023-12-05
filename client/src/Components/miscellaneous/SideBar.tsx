@@ -1,25 +1,32 @@
 import { Avatar, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Toast, Tooltip, useToast } from '@chakra-ui/react';
 import React,{useState} from 'react';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ProfileModal from './ProfileModal';
 import { useNavigate } from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react';
 import ChatLoading from '../ChatLoading';
 import axios from 'axios';
 import UserListItem from '../UserAvatar/UserListItem';
+import { setSelectedChat } from '../../Features/selectedchats';
+import { logout } from '../../Features/user';
+import { userType } from '../../ts/configs';
 
 const SideBar: React.FC = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChats] = useState(false);
-  const user = useSelector((state:any)=>state.user.value);
+  const user:userType = useSelector((state:any)=>state.user.value);
   const navigate = useNavigate();
   const {isOpen, onOpen, onClose} = useDisclosure();
   const toast = useToast();
+  const dispatch = useDispatch();
+  
 
   const logoutHandler = () => {
     localStorage.removeItem('userInfo');
+    dispatch(logout());
     navigate('/');
   }
 
@@ -45,7 +52,7 @@ const SideBar: React.FC = () => {
       };
 
       const {data} = await axios.get(`http://localhost:4000/?search=${search}`, config);
-      
+      dispatch(setSelectedChat(data));
       setLoading(false);
       setSearchResult(data);
 
@@ -74,13 +81,13 @@ const SideBar: React.FC = () => {
           },
         };
         
-        const {data} = await axios.post('/chats', {userId}, config);
+        const {data} = await axios.post('http://localhost:4000/chats',{userId}, config);
         // TODO: selectedChat state is not existed, make it available in redux store so whole can access.
-        setSelectedChat(data);
+        // setSelectedChat(data);
         setLoadingChats(false);
         onClose();
 
-      } catch(error)
+      } catch(error:any)
       {
         toast({
           title: "Error Occured",
@@ -155,7 +162,7 @@ const SideBar: React.FC = () => {
             {loading ? (
                 <ChatLoading></ChatLoading>
             ): (
-              searchResult?.map(userItem => (
+              searchResult?.map((userItem:userType) => (
                 <UserListItem
                   key={userItem._id}
                   user={userItem}

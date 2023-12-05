@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
+import { userType } from '../../ts/configs';
 
 interface profileModalProps {
-    user: Object,
+    user: userType,
     children?: any,
 }
 
