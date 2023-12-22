@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Toast, Tooltip, useToast } from '@chakra-ui/react';
+import { Avatar, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Spinner, Text, Toast, Tooltip, useToast } from '@chakra-ui/react';
 import React,{useState} from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import UserListItem from '../UserAvatar/UserListItem';
 import { setSelectedChat } from '../../Features/selectedchats';
 import { logout } from '../../Features/user';
 import { userType } from '../../ts/configs';
+import { setChats } from '../../Features/chats';
 
 const SideBar: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -22,6 +23,7 @@ const SideBar: React.FC = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const toast = useToast();
   const dispatch = useDispatch();
+  const chats = useSelector((state:any) => state.chats);
   
 
   const logoutHandler = () => {
@@ -82,8 +84,9 @@ const SideBar: React.FC = () => {
         };
         
         const {data} = await axios.post('http://localhost:4000/chats',{userId}, config);
-        // TODO: selectedChat state is not existed, make it available in redux store so whole can access.
-        // setSelectedChat(data);
+        if(!chats.find((c:any) => c._id === data._id)) dispatch(setChats([data, ...chats]));
+        
+        dispatch(setSelectedChat(data));
         setLoadingChats(false);
         onClose();
 
@@ -170,6 +173,7 @@ const SideBar: React.FC = () => {
                 />
               ))
             )}
+            {loadingChat && <Spinner ml={"auto"} display={'flex'}/>}
           </DrawerBody>
           </DrawerContent>
       </Drawer>

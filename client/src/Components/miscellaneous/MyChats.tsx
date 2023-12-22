@@ -1,14 +1,135 @@
-import React, { useState } from 'react'
+import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setChats } from '../../Features/chats';
+import { setSelectedChat } from '../../Features/selectedchats';
+import axios from 'axios';
+import { ChatsType, userType } from '../../ts/configs';
+import ChatLoading from '../ChatLoading';
+import { getSender } from '../../ts/chatLogic';
 
-const MyChats = () => {
-  const [loggedUser, setLoggedUser] = useState();
-  const {} = 
+const MyChats:React.FC = () => {
+  const initUser = {
+    _id: "",
+    name: "",
+    pic: "",
+    email: "",
+  }
+  const [loggedUser, setLoggedUser] = useState<userType>(initUser);
 
+  const dispatch = useDispatch();
+  
+  const user = useSelector((state:any) => state.user.value);
+  const selectedchat = useSelector((state:any)=> state.selectedChat);
+  const chats = useSelector((state:any) => state.chats);
+
+  const toast = useToast();
+
+  const fetchChats = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const {data} = await axios.get('http://localhost:4000/chats', config);
+      dispatch(setChats(data as ChatsType[]));
+      console.log(chats);
+      //TODO: chats not printing initially but later printing
+
+    } catch (error:any) {
+      toast({
+        title: "Error Occured!",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-left',
+      });
+    }
+  };
+
+  useEffect(()=>{
+    // let userInfo;
+    // const d = localStorage.getItem("userInfo");
+    // if(d) {
+    //   userInfo = JSON.parse(d);
+    //   if(userInfo) {
+    //     setLoggedUser(userInfo);
+    //   }
+    // }
+    setLoggedUser(user);
+    fetchChats();
+  }, []);
 
   return (
-    <div style={{color: 'white'}}>
-      My chats here
-    </div>
+    <Box
+      display={{base: selectedchat ? "none" : "flex", md: "flex"}}
+      flexDir={"column"}
+      alignItems={'center'}
+      p={3}
+      bg={'white'}
+      w={{base: '100%', md: '31%'}}
+      borderRadius='lg'
+      borderWidth='1px'
+    >
+      <Box
+        pb={3}
+        px={3}
+        fontSize={{base: '28px', md: '30px'}}
+        display={'flex'}
+        w={'100%'}
+        justifyContent={"space-between"}
+        alignItems={'center'}
+      >My Chats
+      <Button
+        display={'flex'}
+        fontSize={{base: '17px', md: '10px', lg:'17px'}}
+      >
+        New Group Chat
+      </Button>
+      </Box>
+
+      <Box
+        display={'flex'}
+        flexDir={'column'}
+        p={3}
+        bg={'#F8F8F8'}
+        w={'100%'}
+        h={'100%'}
+        borderRadius={'lg'}
+        overflowY={'hidden'}
+      >
+        {chats?(
+          <Stack overflowY={'scroll'}>
+            {chats.map((chat:any) => {
+              <Box
+                onClick={()=>dispatch(setSelectedChat(chat))}
+                cursor={'pointer'}
+                bg={selectedchat === chat ? "#38B2AC" : "#E8E8E8"}
+                color={selectedchat === chat ? 'white': 'black'}
+                px={3}
+                py={2}
+                borderRadius={'lg'}
+                key={chat._id}
+              >
+                <Text>
+                  {!chat.isGroupChat?(
+                    <h1>test</h1>
+                    // getSender(loggedUser, chat.users)
+                  ):(chat.chatName)}
+                </Text>
+              </Box>
+            } )}
+          </Stack>
+        ): (
+          <ChatLoading />
+        )}
+      </Box>
+
+    </Box>
   )
 }
 

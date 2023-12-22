@@ -5,3 +5,13 @@ export interface userType {
     pic: string,
     token?: string,
 };
+
+
+export interface ChatsType {
+    _id: string,
+    chatName: string,
+    createdAt: string,
+    isGroupChat: false,
+    updatedAt: string,
+    users: userType[],
+}

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { userType } from "../ts/configs";
 
-const initialValue:userType = {
+const initialValue: userType = {
   _id: "",
   name: "",
   pic: "",

@@ -8,11 +8,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import userReducer from "./Features/user";
 import selectedchatsReducer from './Features/selectedchats';
+import chats from './Features/chats';
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     selectedChat: selectedchatsReducer,
+    chats: chats
   },
 });
 
