@@ -10,12 +10,14 @@ import ChatLoading from '../ChatLoading';
 import { getSender } from '../../ts/chatLogic';
 
 const MyChats:React.FC = () => {
+
   const initUser = {
     _id: "",
     name: "",
     pic: "",
     email: "",
   }
+
   const [loggedUser, setLoggedUser] = useState<userType>(initUser);
 
   const dispatch = useDispatch();
@@ -26,40 +28,30 @@ const MyChats:React.FC = () => {
 
   const toast = useToast();
 
-  const fetchChats = async () => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-
-      const {data} = await axios.get('http://localhost:4000/chats', config);
-      dispatch(setChats(data as ChatsType[]));
-      console.log(chats);
-      //TODO: chats not printing initially but later printing
-
-    } catch (error:any) {
-      toast({
-        title: "Error Occured!",
-        description: error.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: 'bottom-left',
-      });
-    }
-  };
-
   useEffect(()=>{
-    // let userInfo;
-    // const d = localStorage.getItem("userInfo");
-    // if(d) {
-    //   userInfo = JSON.parse(d);
-    //   if(userInfo) {
-    //     setLoggedUser(userInfo);
-    //   }
-    // }
+    const fetchChats = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+  
+        const {data} = await axios.get('http://localhost:4000/chats', config);
+        dispatch(setChats(data as ChatsType[]));  
+
+      } catch (error:any) {
+        toast({
+          title: "Error Occured!",
+          description: error.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: 'bottom-left',
+        });
+      }
+    };
+
     setLoggedUser(user);
     fetchChats();
   }, []);
@@ -104,7 +96,7 @@ const MyChats:React.FC = () => {
       >
         {chats?(
           <Stack overflowY={'scroll'}>
-            {chats.map((chat:any) => {
+            {chats.map((chat:any) => (
               <Box
                 onClick={()=>dispatch(setSelectedChat(chat))}
                 cursor={'pointer'}
@@ -117,12 +109,12 @@ const MyChats:React.FC = () => {
               >
                 <Text>
                   {!chat.isGroupChat?(
-                    <h1>test</h1>
-                    // getSender(loggedUser, chat.users)
+                    // <h1>test</h1>
+                    getSender(loggedUser, chat.users)
                   ):(chat.chatName)}
                 </Text>
               </Box>
-            } )}
+            ) )}
           </Stack>
         ): (
           <ChatLoading />
