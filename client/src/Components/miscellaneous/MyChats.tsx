@@ -8,6 +8,7 @@ import axios from 'axios';
 import { ChatsType, userType } from '../../ts/configs';
 import ChatLoading from '../ChatLoading';
 import { getSender } from '../../ts/chatLogic';
+import GroupChatModal from './GroupChatModal';
 
 const MyChats:React.FC = () => {
 
@@ -27,7 +28,7 @@ const MyChats:React.FC = () => {
   const chats = useSelector((state:any) => state.chats);
 
   const toast = useToast();
-
+  
   useEffect(()=>{
     const fetchChats = async () => {
       try {
@@ -76,12 +77,14 @@ const MyChats:React.FC = () => {
         justifyContent={"space-between"}
         alignItems={'center'}
       >My Chats
-      <Button
-        display={'flex'}
-        fontSize={{base: '17px', md: '10px', lg:'17px'}}
-      >
-        New Group Chat
-      </Button>
+      <GroupChatModal>
+        <Button
+          display={'flex'}
+          fontSize={{base: '17px', md: '10px', lg:'17px'}}
+        >
+          New Group Chat
+        </Button>
+      </GroupChatModal>
       </Box>
 
       <Box
@@ -98,10 +101,12 @@ const MyChats:React.FC = () => {
           <Stack overflowY={'scroll'}>
             {chats.map((chat:any) => (
               <Box
-                onClick={()=>dispatch(setSelectedChat(chat))}
+                onClick={function() {
+                  dispatch(setSelectedChat(chat));
+                }}
                 cursor={'pointer'}
-                bg={selectedchat === chat ? "#38B2AC" : "#E8E8E8"}
-                color={selectedchat === chat ? 'white': 'black'}
+                bg={selectedchat.selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
+                color={selectedchat.selectedChat === chat ? 'white': 'black'}
                 px={3}
                 py={2}
                 borderRadius={'lg'}

@@ -1,4 +1,4 @@
-export interface userType {
+export type userType =  {
     _id: string,
     name: string,
     email: string,
@@ -6,12 +6,11 @@ export interface userType {
     token?: string,
 };
 
-
-export interface ChatsType {
+export type ChatsType = {
     _id: string,
     chatName: string,
     createdAt: string,
     isGroupChat: false,
     updatedAt: string,
-    users: userType[],
+    users: [userType],
 }

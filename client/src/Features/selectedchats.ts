@@ -1,11 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userType } from "../ts/configs";
+import { ChatsType, userType } from "../ts/configs";
 
-const initialValue:userType = {
+const dummyVal:userType = {
     _id: "",
     name: "",
-    pic: "",
     email: "",
+    pic: "",
+}
+
+const initialValue = {
+  selectedChat: {
+    _id: "",
+    chatName: "",
+    createdAt: "",
+    isGroupChat: false,
+    updatedAt: "",
+    users: [dummyVal],
+  }
 };
 
 export const selectedChatSlice = createSlice({
@@ -13,11 +24,11 @@ export const selectedChatSlice = createSlice({
   initialState: initialValue,
   reducers: {
     setSelectedChat: (state:any, action) => {
-      state.value = action.payload;
+      state.selectedChat = action.payload;
     },
 
     clearSelectedChat: (state:any) => {
-      state.value = initialValue;
+      state = initialValue;
     },
   },
 });
