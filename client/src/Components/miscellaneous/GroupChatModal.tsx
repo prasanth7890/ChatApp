@@ -16,6 +16,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setChats } from "../../Features/chats";
+import axios from "axios";
+import UserListItem from "../UserAvatar/UserListItem";
 
 const GroupChatModal = ({ children }: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,11 +33,43 @@ const GroupChatModal = ({ children }: any) => {
   const chats = useSelector((state:any) => state.chats);
   const dispatch = useDispatch();
 
-  const handleSearch = (e) => {
-    
+  const handleSearch = async (query: string) => {
+    setSearch(query);
+    if(!query) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const {data} = await axios.get(`http://localhost:4000/?search=${search}`, config);
+      console.log(data);
+      setLoading(false);
+      setSearchResult(data);
+
+    } catch (error) {
+      toast({
+        title: "Error Occured",
+        description: "Failed to Load the Search Results",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
   }
 
+  const handleSubmit = () => {}
 
+  const sayHello = () => {
+    console.log('say hello');
+  }
   return (
     <>
       <span onClick={onOpen}>{children}</span>
@@ -61,11 +95,15 @@ const GroupChatModal = ({ children }: any) => {
             </FormControl> 
             //TODO
             {/* selected users  */}
-            {/* render searched users  */}
+            {loading ? <div>loading</div>: (
+              searchResult?.slice(0,4).map((user)=> (
+                <UserListItem key={user._id} user={user} handleFunction={sayHello} />
+              ))
+            ) }
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" onClick={handleSubmit}>
               Close
             </Button>
             <Button variant="ghost">Secondary Action</Button>
