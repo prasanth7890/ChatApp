@@ -59,7 +59,7 @@ const MyChats:React.FC = () => {
 
   return (
     <Box
-      display={{base: selectedchat ? "none" : "flex", md: "flex"}}
+      display={{base: selectedchat.selectedChat._id !== "" ? "none" : "flex", md: "flex"}}
       flexDir={"column"}
       alignItems={'center'}
       p={3}
