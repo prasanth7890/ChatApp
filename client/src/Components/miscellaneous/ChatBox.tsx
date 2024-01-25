@@ -1,10 +1,10 @@
-import React from 'react'
 import { setSelectedChat } from '../../Features/selectedchats';
 import { useDispatch } from 'react-redux';
 import { Box } from '@chakra-ui/react';
 import { useSelector } from "react-redux";
+import SingleChat from '../SingleChat';
 
-const ChatBox = () => {
+const ChatBox = (props: {fetchAgain: boolean, setfetchAgain: any}) => {
   const dispatch = useDispatch();
   const selectedChat = useSelector((state:any) => state.selectedChat.selectedChat)
 
@@ -20,7 +20,7 @@ const ChatBox = () => {
       borderRadius={'lg'}
       borderWidth={'1px'}
     >
-        Chat Box Here
+        <SingleChat fetchApi={props.fetchAgain} setfetchApi={props.setfetchAgain}/>
     </Box>
   )
 }   

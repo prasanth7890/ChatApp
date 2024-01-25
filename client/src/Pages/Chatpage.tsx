@@ -13,6 +13,7 @@ const Chatpage:React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector((state:any)=>state.user.value);
+    const [fetchAgain, setfetchAgain] = useState(false);
     
     useEffect(()=>{
         const data = localStorage.getItem("userInfo");
@@ -34,8 +35,8 @@ const Chatpage:React.FC = () => {
         height={'91.5vh'}
         padding={'10px'}
       >
-        {user && <MyChats/>}
-        {user && <ChatBox/>}
+        {user && <MyChats fetchAgain={fetchAgain}/>}
+        {user && <ChatBox fetchAgain={fetchAgain} setfetchAgain={setfetchAgain} />}
       </Box>
     </div>
   )

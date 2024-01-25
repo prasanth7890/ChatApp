@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
+import { Button, IconButton, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import { userType } from '../../ts/configs';
 
 interface profileModalProps {
@@ -12,7 +12,9 @@ const ProfileModal:React.FC<profileModalProps> = ({user, children}) => {
 
   return (
     <div>
-      {children ? <span onClick={onOpen}>{children}</span> : <span>Hi😁</span>}
+      {children ? <span onClick={onOpen}>{children}</span> : (
+        <IconButton aria-label='profile modal' display={{ base: "flex" }} icon={<i className="fa-regular fa-user"></i>} onClick={onOpen} />
+      )}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>

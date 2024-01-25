@@ -10,7 +10,7 @@ import ChatLoading from '../ChatLoading';
 import { getSender } from '../../ts/chatLogic';
 import GroupChatModal from './GroupChatModal';
 
-const MyChats:React.FC = () => {
+const MyChats = (props: { fetchAgain: boolean }) => {
 
   const initUser = {
     _id: "",
@@ -55,7 +55,7 @@ const MyChats:React.FC = () => {
 
     setLoggedUser(user);
     fetchChats();
-  }, []);
+  }, [props.fetchAgain]);
 
   return (
     <Box

@@ -28,7 +28,7 @@ export const selectedChatSlice = createSlice({
     },
 
     clearSelectedChat: (state:any) => {
-      state = initialValue;
+      state.selectedChat = initialValue;
     },
   },
 });
