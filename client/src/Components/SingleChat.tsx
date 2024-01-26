@@ -5,6 +5,7 @@ import {IconButton} from "@chakra-ui/button"
 import { clearSelectedChat } from "../Features/selectedchats";
 import { getSender, getSenderFull } from "../ts/chatLogic";
 import ProfileModal from "./miscellaneous/ProfileModal";
+import UpdateGroupModal from "./miscellaneous/UpdateGroupModal";
 
 const SingleChat = (props: {fetchApi: boolean, setfetchApi: any}) => {
     const user = useSelector((state:any)=>state.user.value);
@@ -29,6 +30,7 @@ const SingleChat = (props: {fetchApi: boolean, setfetchApi: any}) => {
                     // if groupchat
                     <>
                         <p style={{fontSize: '25px'}}>{selectedchat.chatName.toUpperCase()}</p>
+                        <UpdateGroupModal fetchAgain={props.fetchApi} setfetchAgain={props.setfetchApi}></UpdateGroupModal>
                     </>
                 ) : (
                     <>
