@@ -12,6 +12,7 @@ import {
   Box,
   FormControl,
   Input,
+  Spinner,
 } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/button";
 import { Button } from "@chakra-ui/react";
@@ -19,6 +20,8 @@ import { setSelectedChat } from "../../Features/selectedchats";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import UserBadge from "../UserAvatar/UserBadge";
+import axios from "axios";
+import UserListItem from "../UserAvatar/UserListItem";
 
 const UpdateGroupModal = (props: {
   fetchAgain: boolean;
@@ -27,7 +30,7 @@ const UpdateGroupModal = (props: {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupchatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
-  const [searchResult, setsearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [renameLoading, setRenameLoading] = useState(false);
 
@@ -41,10 +44,77 @@ const UpdateGroupModal = (props: {
 
   const handleRemove = (user: any) => {};
 
-  const handleRename = () => {};
+  const handleAddUser = () => {
+  
+  }
 
-  const handleSearch = () => {
-    
+  const handleRename = async () => {
+    if(!groupchatName) return;
+
+    try {
+      setRenameLoading(true);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        }
+      }
+
+      const { data } = await axios.put(
+        "http://localhost:4000/chats/rename",
+        {
+          chatId: selectedchat._id,
+          chatName: groupchatName,
+        },
+        config
+      );
+
+      dispatch(setSelectedChat(data));
+      props.setfetchAgain(!props.fetchAgain);
+      setRenameLoading(false);
+    } catch (error:any) {
+      toast({
+        title: "Error Occured!",
+        description: error.message.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom"
+      });
+      setRenameLoading(false);
+    }
+    setGroupChatName("");
+  };
+
+  const handleSearch = async (query: string) => {
+    setSearch(query);
+    if(!query) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const {data} = await axios.get(`http://localhost:4000/?search=${search}`, config);
+      setSearchResult(data);
+      setLoading(false);
+
+    } catch (error) {
+      toast({
+        title: "Error Occured",
+        description: "Failed to Load the Search Results",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
   }
     
   return (
@@ -93,21 +163,32 @@ const UpdateGroupModal = (props: {
                 Update
               </Button>
             </FormControl>
+
             <FormControl display={"flex"}>
               <Input
                 placeholder="Add User to group"
                 mb={1}
-                value={groupchatName}
+                // value={groupchatName}
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
+            {loading ? (
+              <Spinner size={'lg'}/>
+            ): (
+              searchResult?.map((usr)=> {
+                <UserListItem 
+                  key={usr._id}
+                  user={usr}
+                  handleFunction={() => handleAddUser()}
+                />
+              })
+            )}
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+            <Button colorScheme="red" onClick={()=> handleRemove(user)}>
+              Leave Group
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
