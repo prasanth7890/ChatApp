@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import UserBadge from "../UserAvatar/UserBadge";
 import axios from "axios";
 import UserListItem from "../UserAvatar/UserListItem";
+import { userType } from "../../ts/configs";
 
 const UpdateGroupModal = (props: {
   fetchAgain: boolean;
@@ -30,7 +31,7 @@ const UpdateGroupModal = (props: {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupchatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [renameLoading, setRenameLoading] = useState(false);
 
@@ -42,10 +43,59 @@ const UpdateGroupModal = (props: {
   );
   const dispatch = useDispatch();
 
-  const handleRemove = (user: any) => {};
+  const handleRemove = (user: any) => {
 
-  const handleAddUser = () => {
-  
+  };
+
+  const handleAddUser = async (user1: userType) => {
+    if(selectedchat.users.find((u:userType) => u._id === user1._id)) {
+      toast({
+        title: "User Already in Group!",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom"
+      });
+      return;
+    }
+
+    if(selectedchat.groupAdmin._id !== user._id) {
+      toast({
+        title: "Only admins can add someone",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom"
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        }
+      }
+
+      const { data } = await axios.put(
+        "http://localhost:4000/chats/groupadd",
+        {
+          chatId: selectedchat._id,
+          userId: user1._id,
+        },
+        config
+      );
+
+      dispatch(setSelectedChat(data));
+      props.setfetchAgain(!props.fetchAgain);
+      setLoading(false);
+    }
+    catch (error) {
+      
+    }
+      
   }
 
   const handleRename = async () => {
@@ -172,17 +222,19 @@ const UpdateGroupModal = (props: {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
-            {loading ? (
-              <Spinner size={'lg'}/>
-            ): (
-              searchResult?.map((usr)=> {
-                <UserListItem 
-                  key={usr._id}
-                  user={usr}
-                  handleFunction={() => handleAddUser()}
-                />
-              })
-            )}
+            <div>
+              {loading ? (
+                <Spinner size={'lg'}/>
+              ): (
+                searchResult?.map((usr: userType)=> {
+                  return <UserListItem 
+                    key={usr._id}
+                    user={usr}
+                    handleFunction={() => handleAddUser(usr)}
+                  />
+                })
+              )}
+            </div>
           </ModalBody>
 
           <ModalFooter>
