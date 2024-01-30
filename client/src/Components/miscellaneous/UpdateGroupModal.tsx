@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/button";
 import { Button } from "@chakra-ui/react";
-import { setSelectedChat } from "../../Features/selectedchats";
+import { clearSelectedChat, setSelectedChat } from "../../Features/selectedchats";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import UserBadge from "../UserAvatar/UserBadge";
@@ -43,8 +43,42 @@ const UpdateGroupModal = (props: {
   );
   const dispatch = useDispatch();
 
-  const handleRemove = (user: any) => {
+  const handleRemove = async (user1: userType) => {
+      if(selectedchat.groupAdmin._id !== user._id && user1._id !== user._id) {
+        toast({
+          title: 'Only admins can remove someone!',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+          position: "bottom"
+        });
+        return;
+      }
 
+      try {
+        setLoading(true);
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          }
+        }
+
+        const { data } = await axios.put(
+          "http://localhost:4000/chats/groupremove",
+          {
+            chatId: selectedchat._id,
+            userId: user1._id,
+          },
+          config
+        );
+
+        user1._id === user._id ? dispatch(clearSelectedChat()) : dispatch(setSelectedChat(data));
+        props.setfetchAgain(!props.fetchAgain);
+        setLoading(false);
+      } catch (error) {
+        
+      }
   };
 
   const handleAddUser = async (user1: userType) => {
