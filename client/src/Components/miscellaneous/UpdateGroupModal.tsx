@@ -25,8 +25,9 @@ import UserListItem from "../UserAvatar/UserListItem";
 import { userType } from "../../ts/configs";
 
 const UpdateGroupModal = (props: {
-  fetchAgain: boolean;
-  setfetchAgain: any;
+  fetchAgain: boolean,
+  setfetchAgain: any,
+  fetchMessages: any,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupchatName, setGroupChatName] = useState("");
@@ -75,6 +76,7 @@ const UpdateGroupModal = (props: {
 
         user1._id === user._id ? dispatch(clearSelectedChat()) : dispatch(setSelectedChat(data));
         props.setfetchAgain(!props.fetchAgain);
+        props.fetchMessages();
         setLoading(false);
       } catch (error) {
         
